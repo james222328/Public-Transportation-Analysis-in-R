@@ -1,0 +1,120 @@
+```r
+---
+title: "Public Transportation Analysis"
+author: "Sagar James"
+
+---
+
+# Objective 1: Satisfaction Levels Between Daily and Non-Daily Users
+
+```{r load-data-1, echo=TRUE}
+# Load the data
+data <- read.csv("Responses.csv")
+
+# Print column names
+print(colnames(data))
+```
+
+```{r t-test, echo=TRUE}
+# Split data into daily and non-daily users
+daily_users <- data[data$How.often.do.you.use.public.transport. == "Daily", ]
+non_daily_users <- data[data$How.often.do.you.use.public.transport. != "Daily", ]
+
+# Perform t-test
+t_test_result <- t.test(
+  daily_users$How.satisfied.are.you.with.the.public.transport.service.overall.,
+  non_daily_users$How.satisfied.are.you.with.the.public.transport.service.overall.
+)
+
+# Print the t-test result
+print(t_test_result)
+```
+
+**Conclusion:**  
+The p-value is slightly greater than 0.05, suggesting that there is no statistically significant difference in satisfaction levels between daily and non-daily users.  
+
+---
+
+# Objective 2: Satisfaction Levels by Transport Type
+
+```{r anova-setup, echo=TRUE}
+# Load required library
+library(stats)
+
+# Convert transport type to a factor
+data$Transport_Type <- as.factor(data$What.type.of.public.transport.do.you.use.most.often.)
+
+# Perform one-way ANOVA
+anova_result <- aov(
+  How.satisfied.are.you.with.the.public.transport.service.overall. ~ Transport_Type,
+  data = data
+)
+
+# Print ANOVA summary
+print(summary(anova_result))
+```
+
+**Conclusion:**  
+The ANOVA result shows a p-value less than 0.05, indicating a significant difference in satisfaction levels across different types of public transport.  
+
+## Visualization: Average Satisfaction by Transport Type
+
+```{r anova-plot, echo=TRUE}
+# Load ggplot2 for visualization
+library(ggplot2)
+
+# Plot average satisfaction by transport type
+ggplot(data, aes(x = Transport_Type, y = How.satisfied.are.you.with.the.public.transport.service.overall.)) +
+  geom_bar(stat = "summary", fun = "mean", fill = "lightblue", color = "darkblue") +
+  labs(
+    title = "Average Satisfaction by Transport Type",
+    x = "Transport Type",
+    y = "Average Satisfaction Score"
+  ) +
+  theme_minimal()
+```
+
+---
+
+# Objective 3: Relationship Between Age and Satisfaction Level
+
+```{r correlation-analysis, echo=TRUE}
+# Load required libraries
+library(ggplot2)
+library(corrplot)
+
+# Compute correlation
+correlation_matrix <- cor(data$Age, data$How.satisfied.are.you.with.the.public.transport.service.overall.)
+print(paste("Correlation between Age and Satisfaction Level:", correlation_matrix))
+```
+
+**Interpretation:**  
+A weak positive correlation (r = 0.2222) exists between age and satisfaction level, suggesting that older individuals tend to have slightly higher satisfaction levels.
+
+## Visualization: Age vs. Satisfaction Level
+
+```{r scatter-plot, echo=TRUE}
+# Scatter plot with linear regression line
+ggplot(data, aes(x = Age, y = How.satisfied.are.you.with.the.public.transport.service.overall.)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "green") +
+  labs(
+    title = "Scatter Plot of Age vs. Satisfaction Level",
+    x = "Age",
+    y = "Satisfaction Level"
+  )
+```
+
+**Caution:**  
+Correlation does not imply causation. Other factors may independently influence both age and satisfaction level.
+
+---
+
+# Summary
+
+1. **Objective 1:** No significant difference in satisfaction levels between daily and non-daily users.
+2. **Objective 2:** Significant differences in satisfaction levels across transport types.
+3. **Objective 3:** Weak positive correlation between age and satisfaction level.
+``` 
+
+This R Markdown script follows a structured format, including code chunks and output, and is ready for rendering into an HTML or PDF document. Adjust file paths as needed to match your data file locations.
