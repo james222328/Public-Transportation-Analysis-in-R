@@ -65,17 +65,3 @@ This project analyzes satisfaction levels of public transportation users based o
    - Displays the relationship between age and satisfaction levels, including a regression line.
 
 ---
-
-## Instructions to Run the Project
-
-1. **Prerequisites:**
-   - Install R and RStudio (or any R-compatible IDE).
-   - Ensure the required libraries are installed:
-     ```r
-     install.packages(c("ggplot2", "corrplot"))
-     ```
-
-2. **Clone the Repository:**
-   ```bash
-   git clone <repository-url>
-   cd <repository-folder>
